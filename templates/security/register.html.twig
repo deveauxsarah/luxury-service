@@ -46,7 +46,6 @@
                                     }
                                 )}}
                                 {{form_label(form.email, 'Email' )}}
-                                <i class="fa fa-eye show-password"></i>
                                 <span class="help-block">Confirm your password.</span>
                             </div>
                             <div class="input-field">
@@ -99,7 +98,7 @@
                             
                             <button type="submit" class="btn btn-lg gradient secondary btn-block waves-effect waves-light mt-20 mb-20">Create an account</button>
                             <div class="links">
-                                <a href="#!">Already have an account? Click here</a>
+                                <a href="{{ path('security_login')}}">Already have an account? Click here</a>
                             </div>
                         {{ form_end(form) }}
                         </div>
