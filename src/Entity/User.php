@@ -3,86 +3,212 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use DateTime;
+use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
-#[ORM\Entity(repositoryClass: UserRepository::class)]
-#[ORM\Table(name: '`users`')]
-class User
+/**
+ * Users
+ *
+ * @ORM\Table(name="users", indexes={@ORM\Index(name="categoryID", columns={"categorie_id"})})
+ * @ORM\Entity
+ */
+class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
     private $id;
 
-    #[ORM\Column(type: 'smallint', nullable: true)]
+    /**
+     * @var int|null
+     *
+     * @ORM\Column(name="gender", type="integer", nullable=true)
+     */
     private $gender;
 
-    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(name="first_name", type="string", length=255, nullable=true)
+     */
     private $firstName;
 
-    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(name="last_name", type="string", length=255, nullable=true)
+     */
     private $lastName;
 
-    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(name="location", type="string", length=255, nullable=true)
+     */
     private $location;
 
-    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(name="address", type="string", length=255, nullable=true)
+     */
     private $address;
 
-    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(name="country", type="string", length=255, nullable=true)
+     */
     private $country;
 
-    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(name="nationality", type="string", length=255, nullable=true)
+     */
     private $nationality;
 
-    #[ORM\Column(type: 'datetime', nullable: true)]
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(name="birthdate", type="string", length=255, nullable=true)
+     */
     private $birthdate;
 
-    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(name="birthplace", type="string", length=255, nullable=true)
+     */
     private $birthplace;
 
-    #[ORM\Column(type: 'text', nullable: true)]
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(name="picture", type="text", length=65535, nullable=true)
+     */
     private $picture;
 
-    #[ORM\Column(type: 'text', nullable: true)]
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(name="passport", type="text", length=65535, nullable=true)
+     */
     private $passport;
 
-    #[ORM\Column(type: 'text', nullable: true)]
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(name="cv", type="text", length=65535, nullable=true)
+     */
     private $cv;
 
-    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(name="experience", type="string", length=255, nullable=true)
+     */
     private $experience;
 
-    #[ORM\Column(type: 'text', nullable: true)]
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(name="description", type="text", length=65535, nullable=true)
+     */
     private $description;
 
-    #[ORM\Column(type: 'boolean', nullable: true)]
+    /**
+     * @var bool|null
+     *
+     * @ORM\Column(name="disponibility", type="boolean", nullable=true)
+     */
     private $disponibility;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="email", type="string", length=255, nullable=false, unique=true)
+     */    
     private $email;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    /**
+     * @var string The hashed password
+     *
+     * @ORM\Column(name="password", type="string", length=255, nullable=false)
+     * @Assert\Length(min="8", minMessage="Too short, 8 characters minimum")
+     */
     private $password;
 
-    #[ORM\Column(type: 'text',  nullable: true)]
-    private $files;
+    /**
+     * @Assert\EqualTo(propertyPath="password", message="You must type the same password")]
+     */
+    public $confirmPassword;
 
-    #[ORM\Column(type: 'text', nullable: true)]
+    /**
+     * @var array
+     *
+     * @ORM\Column(name="roles", type="json")
+     */
+    private $roles = [];
+
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(name="file", type="text", length=65535, nullable=true)
+     */
+    private $file;
+
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(name="notes", type="text", length=65535, nullable=true)
+     */
     private $notes;
 
-    #[ORM\Column(type: 'datetime')]
-    private $createdAt;
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="created_at", type="datetime", nullable=false, options={"default"="CURRENT_TIMESTAMP"})
+     */
+    private $createdAt = 'CURRENT_TIMESTAMP';
 
-    #[ORM\Column(type: 'datetime')]
-    private $updatedAt;
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="updated_at", type="datetime", nullable=false, options={"default"="CURRENT_TIMESTAMP"})
+     */
+    private $updatedAt = 'CURRENT_TIMESTAMP';
 
-    #[ORM\Column(type: 'boolean')]
-    private $isAdmin;
+    /**
+     * @var bool
+     *
+     * @ORM\Column(name="is_admin", type="boolean", nullable=false)
+     */
+    private $isAdmin = 0;
 
-    #[ORM\ManyToOne(targetEntity: Categorie::class, inversedBy: 'users')]
+    /**
+     * @var \Categorie
+     *
+     * @ORM\ManyToOne(targetEntity="Categorie")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="categorie_id", referencedColumnName="id")
+     * })
+     */
     private $categorie;
 
+    public function __construct()
+    {
+        $this->createdAt = new DateTime('now');
+        $this->updatedAt = new DateTime('now');
+    }
 
     public function getId(): ?int
     {
@@ -281,7 +407,10 @@ class User
         return $this;
     }
 
-    public function getPassword(): ?string
+    /**
+     * @see PasswordAuthenticatedUserInterface
+     */
+    public function getPassword(): string
     {
         return $this->password;
     }
@@ -293,14 +422,44 @@ class User
         return $this;
     }
 
-    public function getFiles(): ?string
+    /**
+     * A visual identifier that represents this user.
+     *
+     * @see UserInterface
+     */
+    public function getUserIdentifier(): string
     {
-        return $this->files;
+        return (string) $this->email;
     }
 
-    public function setFiles(?string $files): self
+    /**
+     * @see UserInterface
+     */
+    public function getRoles(): array
     {
-        $this->files = $files;
+        $roles = $this->roles;
+        // guarantee every user at least has ROLE_USER
+        $roles[] = 'ROLE_USER';
+
+        return array_unique($roles);
+    }
+
+    public function setRoles(array $roles): self
+    {
+        $this->roles = $roles;
+
+        return $this;
+    }
+
+
+    public function getFile(): ?string
+    {
+        return $this->file;
+    }
+
+    public function setFile(?string $file): self
+    {
+        $this->file = $file;
 
         return $this;
     }
@@ -317,24 +476,24 @@ class User
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeInterface
+    public function getCreatedAt(): ?DateTimeInterface
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeInterface $createdAt): self
+    public function setCreatedAt(DateTimeInterface $createdAt): self
     {
         $this->createdAt = $createdAt;
 
         return $this;
     }
 
-    public function getUpdatedAt(): ?\DateTimeImmutable
+    public function getUpdatedAt(): ?\DateTimeInterface
     {
         return $this->updatedAt;
     }
 
-    public function setUpdatedAt(\DateTimeImmutable $updatedAt): self
+    public function setUpdatedAt(\DateTimeInterface $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
         return $this;
@@ -363,5 +522,24 @@ class User
         return $this;
     }
 
+    /**
+     * Returning a salt is only needed, if you are not using a modern
+     * hashing algorithm (e.g. bcrypt or sodium) in your security.yaml.
+     *
+     * @see UserInterface
+     */
+    public function getSalt(): ?string
+    {
+        return null;
+    }
+
+    /**
+     * @see UserInterface
+     */
+    public function eraseCredentials()
+    {
+        // If you store any temporary, sensitive data on the user, clear it here
+        // $this->plainPassword = null;
+    }
 
 }

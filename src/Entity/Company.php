@@ -7,53 +7,95 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: CompanyRepository::class)]
-#[ORM\Table(name: '`companies`')]
+/**
+ * Company
+ *
+ * @ORM\Table(name="companies", indexes={@ORM\Index(name="categorie_id", columns={"categorie_id"})})
+ * @ORM\Entity
+ */
 class Company
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
     private $id;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="name", type="string", length=255, nullable=false)
+     */
     private $name;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="location", type="string", length=255, nullable=false)
+     */
     private $location;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="contact_name", type="string", length=255, nullable=false)
+     */
     private $contactName;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="contact_email", type="string", length=255, nullable=false)
+     */
     private $contactEmail;
 
-    #[ORM\Column(type: 'integer')]
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="contact_phone", type="string", length=255, nullable=false)
+     */
     private $contactPhone;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="contact_job", type="string", length=255, nullable=false)
+     */
     private $contactJob;
 
-    #[ORM\Column(type: 'datetime')]
-    private $createdAt;
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="created_at", type="datetime", nullable=false, options={"default"="CURRENT_TIMESTAMP"})
+     */
+    private $createdAt = 'CURRENT_TIMESTAMP';
 
-    #[ORM\Column(type: 'datetime')]
-    private $updatedAt;
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="updated_at", type="datetime", nullable=false, options={"default"="CURRENT_TIMESTAMP"})
+     */
+    private $updatedAt = 'CURRENT_TIMESTAMP';
 
-    #[ORM\Column(type: 'text', nullable: true)]
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(name="notes", type="text", length=65535, nullable=true)
+     */
     private $notes;
 
-    #[ORM\ManyToOne(targetEntity: Categorie::class, inversedBy: 'companies')]
-    #[ORM\JoinColumn(nullable: false)]
+   /**
+     * @var \Categorie
+     *
+     * @ORM\ManyToOne(targetEntity="Categorie")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="categorie_id", referencedColumnName="id")
+     * })
+     */
     private $categorie;
-
-    #[ORM\OneToMany(mappedBy: 'company', targetEntity: Offer::class)]
-    private $offers;
-
-    public function __construct()
-    {
-        $this->offers = new ArrayCollection();
-    }
 
     public function getId(): ?int
     {
@@ -176,36 +218,6 @@ class Company
     public function setCategorie(?Categorie $categorie): self
     {
         $this->categorie = $categorie;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Offer>
-     */
-    public function getOffers(): Collection
-    {
-        return $this->offers;
-    }
-
-    public function addOffer(Offer $offer): self
-    {
-        if (!$this->offers->contains($offer)) {
-            $this->offers[] = $offer;
-            $offer->setCompany($this);
-        }
-
-        return $this;
-    }
-
-    public function removeOffer(Offer $offer): self
-    {
-        if ($this->offers->removeElement($offer)) {
-            // set the owning side to null (unless already changed)
-            if ($offer->getCompany() === $this) {
-                $offer->setCompany(null);
-            }
-        }
 
         return $this;
     }

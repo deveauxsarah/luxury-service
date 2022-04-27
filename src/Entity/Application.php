@@ -7,47 +7,63 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: ApplicationRepository::class)]
-#[ORM\Table(name: '`applications`')]
+/**
+ * Applications
+ *
+ * @ORM\Table(name="applications", indexes={@ORM\Index(name="offerId", columns={"offer_id"}), @ORM\Index(name="userId", columns={"user_id"})})
+ * @ORM\Entity
+ */
 class Application
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
     private $id;
 
-    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'users')]
-    #[ORM\JoinColumn(nullable: false)]
-    private $user;
-
-    #[ORM\ManyToOne(targetEntity: Offer::class, inversedBy: 'applications')]
-    #[ORM\JoinColumn(nullable: false)]
+    /**
+     * @var \Offer
+     *
+     * @ORM\ManyToOne(targetEntity="Offer")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="offer_id", referencedColumnName="id")
+     * })
+     */
     private $offer;
 
-    #[ORM\Column(type: 'datetime')]
-    private $createdAt;
+    /**
+     * @var \User
+     *
+     * @ORM\ManyToOne(targetEntity="User")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     * })
+     */
+    private $user;
 
-    public function __construct()
-    {
-        $this->user = new ArrayCollection();
-    }
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="created_at", type="datetime", nullable=false, options={"default"="CURRENT_TIMESTAMP"})
+     */
+    private $createdAt = 'CURRENT_TIMESTAMP';
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    /**
-     * @return Collection<int, User>
-     */
-    public function getUser(): Collection
+    public function getCreatedAt(): ?\DateTimeInterface
     {
-        return $this->user;
+        return $this->createdAt;
     }
 
-    public function setUser(?User $user): self
+    public function setCreatedAt(\DateTimeInterface $createdAt): self
     {
-        $this->user = $user;
+        $this->createdAt = $createdAt;
 
         return $this;
     }
@@ -64,15 +80,17 @@ class Application
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeInterface
+    public function getUser(): ?User
     {
-        return $this->createdAt;
+        return $this->user;
     }
 
-    public function setCreatedAt(\DateTimeInterface $createdAt): self
+    public function setUser(?User $user): self
     {
-        $this->createdAt = $createdAt;
+        $this->user = $user;
 
         return $this;
     }
+
+
 }

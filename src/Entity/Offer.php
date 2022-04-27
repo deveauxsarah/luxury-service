@@ -7,56 +7,103 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: OfferRepository::class)]
-#[ORM\Table(name: '`offers`')]
+/**
+ * Offers
+ *
+ * @ORM\Table(name="offers", indexes={@ORM\Index(name="companyId", columns={"company_id"})})
+ * @ORM\Entity
+ */
 class Offer
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
     private $id;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="name", type="string", length=255, nullable=false)
+     */
     private $name;
 
-    #[ORM\Column(type: 'text')]
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="content", type="text", length=65535, nullable=false)
+     */
     private $content;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="job_type", type="string", length=255, nullable=false)
+     */
     private $jobType;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="position", type="string", length=255, nullable=false)
+     */
     private $position;
 
-    #[ORM\Column(type: 'integer')]
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="reference", type="string", length=255, nullable=false)
+     */
     private $reference;
 
-    #[ORM\Column(type: 'datetime')]
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="starting_date", type="string", length=255, nullable=false)
+     */
     private $startingDate;
 
-    #[ORM\Column(type: 'integer')]
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="salary", type="integer", nullable=false)
+     */
     private $salary;
 
-    #[ORM\Column(type: 'datetime')]
-    private $createdAt;
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="created_at", type="datetime", nullable=false, options={"default"="CURRENT_TIMESTAMP"})
+     */
+    private $createdAt = 'CURRENT_TIMESTAMP';
 
-    #[ORM\Column(type: 'datetime')]
-    private $updatedAt;
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="updated_at", type="datetime", nullable=false, options={"default"="CURRENT_TIMESTAMP"})
+     */
+    private $updatedAt = 'CURRENT_TIMESTAMP';
 
-    #[ORM\Column(type: 'text', nullable: true)]
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(name="notes", type="text", length=65535, nullable=true)
+     */
     private $notes;
 
-    #[ORM\ManyToOne(targetEntity: Company::class, inversedBy: 'offers')]
-    #[ORM\JoinColumn(nullable: false)]
+    /**
+     * @var \Company
+     *
+     * @ORM\ManyToOne(targetEntity="Company")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="company_id", referencedColumnName="id")
+     * })
+     */
     private $company;
 
-    #[ORM\OneToMany(mappedBy: 'offer', targetEntity: Application::class)]
-    private $applications;
-
-    public function __construct()
-    {
-        $this->applications = new ArrayCollection();
-    }
 
     public function getId(): ?int
     {
@@ -123,12 +170,12 @@ class Offer
         return $this;
     }
 
-    public function getStartingDate(): ?\DateTimeInterface
+    public function getStartingDate(): ?string
     {
         return $this->startingDate;
     }
 
-    public function setStartingDate(\DateTimeInterface $startingDate): self
+    public function setStartingDate(string $startingDate): self
     {
         $this->startingDate = $startingDate;
 
@@ -191,36 +238,6 @@ class Offer
     public function setCompany(?Company $company): self
     {
         $this->company = $company;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Application>
-     */
-    public function getApplications(): Collection
-    {
-        return $this->applications;
-    }
-
-    public function addApplication(Application $application): self
-    {
-        if (!$this->applications->contains($application)) {
-            $this->applications[] = $application;
-            $application->setOffer($this);
-        }
-
-        return $this;
-    }
-
-    public function removeApplication(Application $application): self
-    {
-        if ($this->applications->removeElement($application)) {
-            // set the owning side to null (unless already changed)
-            if ($application->getOffer() === $this) {
-                $application->setOffer(null);
-            }
-        }
 
         return $this;
     }
