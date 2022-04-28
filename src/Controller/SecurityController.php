@@ -38,19 +38,19 @@ class SecurityController extends AbstractController
     }
 
     #[Route('/login', name: 'security_login', methods: [ 'GET', 'POST'])]
-    public function login(AuthenticationUtils $authenticationUtils, ManagerRegistry $doctrine, Request $request): Response
+    public function login(AuthenticationUtils $authenticationUtils, ManagerRegistry $doctrine): Response
     {
         // get the login error if there is one
         $error = $authenticationUtils->getLastAuthenticationError();
         // last username entered by the user
         $lastUsername = $authenticationUtils->getLastUsername();
-        $users = $doctrine->getRepository(User::class)->find($lastUsername);
+        $user = $doctrine->getRepository(User::class)->find($lastUsername);
 
         return $this->render('security/login.html.twig', [
             'controller_name' => 'SecurityController',
             'last_username' => $lastUsername,
             'error' => $error,
-            'users' => $users
+            'user' => $user
           ]);
     }
 

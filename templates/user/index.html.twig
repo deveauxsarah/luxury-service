@@ -39,6 +39,7 @@
         {% for user in users %}
             <tr>
                 <td>{{ user.id }}</td>
+                <td>{{ user.email }}</td>
                 <td>{{ user.gender }}</td>
                 <td>{{ user.firstName }}</td>
                 <td>{{ user.lastName }}</td>
@@ -63,8 +64,8 @@
                 <td>{{ user.updatedAt ? user.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
                 <td>{{ user.isAdmin ? 'Yes' : 'No' }}</td>
                 <td>
-                    <a href="{{ path('app_user_show', {'id': user.id}) }}">show</a>
-                    <a href="{{ path('app_user_edit', {'id': user.id}) }}">edit</a>
+                    <a href="{{ path('app_profile') }}">show</a>
+                    <a href="{{ path('app_profile_edit', {'id': user.id}) }}">edit</a>
                 </td>
             </tr>
         {% else %}
