@@ -142,13 +142,7 @@
                 <div class="col-xs-12 col-sm-6">
                     <div class="col-xs-12 col-sm-12">
                         <div class="input-field" style="margin-top: 5px;">
-                            {# <select id="job_sector" name="job_sector[]" multiple data-placeholder="Type in or Select job sector you would be interested in."> #}
-                                {{ form_widget(form.categorie, { 'attr' : { 'multiple data-placeholder':'Type in or Select job sector you would be interested in.', 'id':'job_sector', 'name':'job_sector[]'}}) }}
-                                <option value="">Choose an option...</option>
-                                {% for categorie in categories %}
-                                    <option value="{{ categorie.id }}">{{ categorie.name }}</option>
-                                {% endfor %}
-                            {# </select> #}
+                            {{ form_widget(form.categorie, { 'attr' : { 'style' : 'display:block', 'id':'job_sector', 'name':'job_sector[]'}}) }}
                             <label for="job_sector" class="active">Interest in job sector</label>
                         </div>
                     </div>
@@ -167,14 +161,15 @@
                 </div>
             </div>
             <div class="col-xs-12 col-sm-6 col-md-4 col-md-offset-4">
-                <button class="btn btn-block btn-lg gradient secondary waves-effect waves-light">
-                    {{ button_label|default('Save') }}
+                {{ form_widget(form) }}
+                <button class="btn btn-block btn-lg gradient secondary waves-effect waves-light" type="submit">
+                    {{ button_label|default('Update') }}
                 </button>
             </div>
         </div>
     </section>      
 
-    <section class="section-padding gray-bg">
+    {# <section class="section-padding gray-bg">
                 <div class="container">
                     <div class="row">
                         <h3 class="text-extrabold">Your K-Yachting account</h3>
@@ -214,7 +209,7 @@
                     </div>
 
                 </div>
-            </section>
+            </section> #}
 
 {{ form_end(form) }}
             {# <div class="row">

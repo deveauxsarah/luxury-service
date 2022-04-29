@@ -6,8 +6,8 @@ use App\Entity\User;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -18,6 +18,7 @@ class UserType extends AbstractType
         $builder
             ->add('gender', ChoiceType::class, [
                 'choices' => [
+                    'Choose an option' => '',
                     'Female' => 0,
                     'Male' => 1,
                     'Transgender' => 2
@@ -29,9 +30,9 @@ class UserType extends AbstractType
             ->add('address')
             ->add('country')
             ->add('nationality')
-            ->add('birthdate', DateType::class, [
-                'widget' => 'single_text',
-                'format' => 'yyyy-MM-dd'
+            ->add('birthdate', TextType::class, [
+                // 'widget' => 'single_text',
+                // 'format' => 'yyyy-MM-dd'
             ])
             ->add('birthplace')
             ->add('picture', FileType::class, [
@@ -57,12 +58,13 @@ class UserType extends AbstractType
             ])
             ->add('experience', ChoiceType::class, [
                 'choices' => [
-                    '0 - 6 month' => '3m',
-                    '6 month - 1 year' => '6m',
-                    '1 - 2 years' => '1y',
-                    '2+ years' => '2y',
-                    '5+ years' => '5y',
-                    '10+ years' => '10y'
+                    'Choose an option' => '',
+                    '0 - 6 month' => '0 - 6 month',
+                    '6 month - 1 year' => '6 month - 1 year',
+                    '1 - 2 years' => '1 - 2 years',
+                    '2+ years' => '2+ years',
+                    '5+ years' => '5+ years',
+                    '10+ years' => '10+ years'
                 ]
             ])
             ->add('description')

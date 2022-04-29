@@ -69,61 +69,73 @@ class UserController extends AbstractController
     }
 
     #[Route('/profile/edit/{id}', name: 'app_profile_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, ManagerRegistry $doctrine, EntityManagerInterface $entityManager): Response
+    public function edit(Request $request, User $user, ManagerRegistry $doctrine, EntityManagerInterface $entityManager): Response
     {
-        $userId = $request->query->get('id');
-        $user = $doctrine->getRepository(User::class)->findOneBy(['id' => $userId]);
-        
+        // $userId = $request->query->get('id');
+        // $user = $doctrine->getRepository(User::class)->findOneBy(['id' => $userId]);
+        // dd($user);
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
         $categories = $doctrine->getRepository(Categorie::class)->findAll();
 
-        // $array = (array) $form->getData();
-        // $info = 0;
-        // $total = 0;
-        // foreach ($array as $key => $value) {
-        //    if ($value !== null){
-        //         $total++;
-        //         $info++;
-        //    }else{
-        //        $total++;
-        //    }
-        // }
-        // $percent =  $info/$total*100;
+        $category = $form->get('categorie')->getData();
+        $gender = $form->get('gender')->getData();
+        $firstName = $form->get('firstName')->getData();
+        $lastName = $form->get('lastName')->getData();
+        $location = $form->get('location')->getData();
+        $address = $form->get('address')->getData();
+        $country = $form->get('country')->getData();
+        $nationality = $form->get('nationality')->getData();
+        $birthdate = $form->get('birthdate')->getData();
+        $birthplace = $form->get('birthplace')->getData();
+        $experience = $form->get('experience')->getData();
+        $description = $form->get('description')->getData();
+        
+        $array = (array) $form->getData();
+        $info = 0;
+        $total = 0;
+        foreach ($array as $key => $value) {
+           if ($value !== null){
+                $total++;
+                $info++;
+           }else{
+               $total++;
+           }
+        }
+        $percent =  $info/$total*100;
         
         if ($form->isSubmitted() && $form->isValid()) {
-            // $category = $request->request->get('categorie')->getData();
-            // if ($percent == 100) {
-            //     $user->setDisponibility(1);
-            // }
-            $user->setGender();
-            $user->setFirstName();
-            $user->setLastName();
-            $user->setLocation();
-            $user->setAddress();
-            $user->setCountry();
-            $user->setNationality();
-            $user->setBirthdate();
-            $user->setBirthplace();
-            $user->setPicture();
-            $user->setPassport();
-            $user->setCv();
-            $user->setExperience();
-            $user->setDescription();
-            $user->setDisponibility();
-            $user->setFile();
-            $user->setCategorie();
+            if ($percent == 100) {
+                $user->setDisponibility(1);
+            }
+            
+            $user->setGender($gender);
+            $user->setFirstName($firstName);
+            $user->setLastName($lastName);
+            $user->setLocation($location);
+            $user->setAddress($address);
+            $user->setCountry($country);
+            $user->setNationality($nationality);
+            $user->setBirthdate($birthdate);
+            $user->setBirthplace($birthplace);
+            // $user->setPicture();
+            // $user->setPassport();
+            // $user->setCv();
+            // $user->setFile();
+            $user->setExperience($experience);
+            $user->setDescription($description);
+            $user->setCategorie($category);
             $user->setUpdatedAt(new DateTime());
-
+            
             $entityManager->flush();
-
-            return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
+            
+            return $this->redirectToRoute('app_profile', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('user/edit.html.twig', [
             'user' => $user,
             'form' => $form,
-            // 'percent' => round($percent)
+            'percent' => round($percent),
             'categories' => $categories,
         ]);
     }
