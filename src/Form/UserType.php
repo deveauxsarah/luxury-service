@@ -10,6 +10,7 @@ use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\File;
 
 class UserType extends AbstractType
 {
@@ -19,9 +20,9 @@ class UserType extends AbstractType
             ->add('gender', ChoiceType::class, [
                 'choices' => [
                     'Choose an option' => '',
-                    'Female' => 0,
-                    'Male' => 1,
-                    'Transgender' => 2
+                    'Female' => 'Female',
+                    'Male' => 'Male',
+                    'Transgender' => 'Transgender'
                 ]
             ])
             ->add('firstName')
@@ -30,31 +31,77 @@ class UserType extends AbstractType
             ->add('address')
             ->add('country')
             ->add('nationality')
-            ->add('birthdate', TextType::class, [
-                // 'widget' => 'single_text',
-                // 'format' => 'yyyy-MM-dd'
-            ])
+            ->add('birthdate', TextType::class)
             ->add('birthplace')
             ->add('picture', FileType::class, [
                 'label' => 'Profile picture',
                 'mapped' => false,
                 'required' => false,
-                'attr' => [
-                    'accept' => ".pdf, .jpg, .doc, .docx, .png, .gif",
+                'constraints' => [
+                    new File([
+                    'maxSize' => '20000000k',
+                    'mimeTypes' => [
+                        'image/jpg',
+                        'image/jpeg',
+                        'image/png',
+                        'image/gif',
+                        ]
+                    ])
                 ]
             ])
             ->add('passport', FileType::class, [
                 'label' => 'passport img',
                 'mapped' => false,
                 'required' => false,
-                'attr' => [
-                    'accept' => ".pdf, .jpg, .doc, .docx, .png, .gif",
+                'constraints' => [
+                    new File([
+                    'maxSize' => '20000000k',
+                    'mimeTypes' => [
+                        'application/pdf',
+                        'application/x-pdf',
+                        'image/jpeg',
+                        'image/jpg',
+                        'application/doc',
+                        'application/docx',
+                        'image/png',
+                        'image/gif',
+                        ]
+                    ])
                 ]
             ])
             ->add('cv', FileType::class, [
                 'label' => 'cv (PDF file)',
                 'mapped' => false,
                 'required' => false,
+                'constraints' => [
+                    new File([
+                    'maxSize' => '20000000k',
+                    'mimeTypes' => [
+                        'application/pdf',
+                        'application/x-pdf',
+                        ]
+                    ])
+                ]
+            ])
+            ->add('file', FileType::class, [
+                'label' => 'file img',
+                'mapped' => false,
+                'required' => false,
+                'constraints' => [
+                    new File([
+                    'maxSize' => '20000000k',
+                    'mimeTypes' => [
+                        'application/pdf',
+                        'application/x-pdf',
+                        'image/jpeg',
+                        'image/jpg',
+                        'application/doc',
+                        'application/docx',
+                        'image/png',
+                        'image/gif',
+                        ]
+                    ])
+                ]
             ])
             ->add('experience', ChoiceType::class, [
                 'choices' => [
@@ -68,15 +115,6 @@ class UserType extends AbstractType
                 ]
             ])
             ->add('description')
-            // ->add('disponibility')
-            // ->add('email')
-            // ->add('password')
-            // ->add('roles')
-            // ->add('file')
-            // ->add('notes')
-            // ->add('createdAt')
-            // ->add('updatedAt')
-            // ->add('isAdmin')
             ->add('categorie', EntityType::class, [
                 'class' => "App\Entity\Categorie"
             ]);

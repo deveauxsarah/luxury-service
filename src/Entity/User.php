@@ -28,9 +28,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $id;
 
     /**
-     * @var int|null
+     * @var string|null
      *
-     * @ORM\Column(name="gender", type="integer", nullable=true)
+     * @ORM\Column(name="gender", type="string", nullable=true)
      */
     private $gender;
 
@@ -79,7 +79,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var string|null
      *
-     * @ORM\Column(name="birthdate", type="string", length=255, nullable=true)
+     * @ORM\Column(name="birthdate", type="string", length=10, nullable=true)
      */
     private $birthdate;
 
@@ -130,7 +130,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      *
      * @ORM\Column(name="disponibility", type="boolean", nullable=true)
      */
-    private $disponibility;
+    private $disponibility = 0;
 
     /**
      * @var string
@@ -171,7 +171,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      *
      * @ORM\Column(name="notes", type="text", length=65535, nullable=true)
      */
-    private $notes;
+    private $notes = "account created";
 
     /**
      * @var \DateTime
@@ -215,12 +215,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->id;
     }
 
-    public function getGender(): ?int
+    public function getGender(): ?string
     {
         return $this->gender;
     }
 
-    public function setGender(?int $gender): self
+    public function setGender(?string $gender): self
     {
         $this->gender = $gender;
 

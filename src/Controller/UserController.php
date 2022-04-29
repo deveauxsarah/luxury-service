@@ -9,9 +9,11 @@ use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 #[Route('/user')]
 class UserController extends AbstractController
@@ -49,7 +51,7 @@ class UserController extends AbstractController
     }
 
     #[Route('/profile', name: 'app_profile', methods: ['GET', 'POST'])]
-    public function show(): Response
+    public function show(Request $request,  ManagerRegistry $doctrine, EntityManagerInterface $entityManager): Response
     {
         // usually you'll want to make sure the user is authenticated first,
         // see "Authorization" below
@@ -60,16 +62,31 @@ class UserController extends AbstractController
         /** @var \App\Entity\User $user */
         $user = $this->getUser();
 
+        $form = $this->createForm(UserType::class, $user);
+        $array = (array) $form->getData();
+        $info = 0;
+        $total = 0;
+        foreach ($array as $key => $value) {
+           if ($value !== null){
+                $total++;
+                $info++;
+           }else{
+               $total++;
+           }
+        }
+        $percent =  $info/$total*100;
+       
         // Call whatever methods you've added to your User class
         // For example, if you added a getFirstName() method, you can use that.
         // return new Response('Well hi there '. $user->getEmail());
         return $this->render('user/profile.html.twig', [
             'user' => $user,
+            'percent' => round($percent),
         ]);
     }
 
     #[Route('/profile/edit/{id}', name: 'app_profile_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, User $user, ManagerRegistry $doctrine, EntityManagerInterface $entityManager): Response
+    public function edit(Request $request, User $user, ManagerRegistry $doctrine, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
     {
         // $userId = $request->query->get('id');
         // $user = $doctrine->getRepository(User::class)->findOneBy(['id' => $userId]);
@@ -77,19 +94,6 @@ class UserController extends AbstractController
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
         $categories = $doctrine->getRepository(Categorie::class)->findAll();
-
-        $category = $form->get('categorie')->getData();
-        $gender = $form->get('gender')->getData();
-        $firstName = $form->get('firstName')->getData();
-        $lastName = $form->get('lastName')->getData();
-        $location = $form->get('location')->getData();
-        $address = $form->get('address')->getData();
-        $country = $form->get('country')->getData();
-        $nationality = $form->get('nationality')->getData();
-        $birthdate = $form->get('birthdate')->getData();
-        $birthplace = $form->get('birthplace')->getData();
-        $experience = $form->get('experience')->getData();
-        $description = $form->get('description')->getData();
         
         $array = (array) $form->getData();
         $info = 0;
@@ -105,26 +109,97 @@ class UserController extends AbstractController
         $percent =  $info/$total*100;
         
         if ($form->isSubmitted() && $form->isValid()) {
+            /** @var UploadedFile $picture */
+            $picture = $form->get('picture')->getData();
+            /** @var UploadedFile $passport */
+            $passport = $form->get('passport')->getData();
+            /** @var UploadedFile $cv */
+            $cv = $form->get('cv')->getData();
+            /** @var UploadedFile $file */
+            $file = $form->get('file')->getData();
+
+            // this condition is needed because the 'picture' field is not required
+            // so the PDF file must be processed only when a file is uploaded
+            if($picture) {
+                $originalFilename = pathinfo($picture->getClientOriginalName(), PATHINFO_FILENAME);
+                // this is needed to safely include the file name as part of the URL
+                $safeFilename = $slugger->slug($originalFilename);
+                $newFilename = $safeFilename.'-'.uniqid().'.'.$picture->guessExtension();
+            
+                // Move the file to the directory where brochures are stored
+                try {
+                    $picture->move(
+                        $this->getParameter('brochures_directory'),
+                        $newFilename
+                    );
+                } catch (FileException $e) {
+                    // ... handle exception if something happens during file upload
+                }
+                // updates the 'brochureFilename' property to store the PDF file name
+                // instead of its contents
+                $user->setPicture($newFilename);
+            }
+            if($passport) {
+                $originalFilename = pathinfo($passport->getClientOriginalName(), PATHINFO_FILENAME);
+                // this is needed to safely include the file name as part of the URL
+                $safeFilename = $slugger->slug($originalFilename);
+                $newFilename = $safeFilename.'-'.uniqid().'.'.$passport->guessExtension();
+            
+                // Move the file to the directory where brochures are stored
+                try {
+                    $passport->move(
+                        $this->getParameter('brochures_directory'),
+                        $newFilename
+                    );
+                } catch (FileException $e) {
+                    // ... handle exception if something happens during file upload
+                }
+                // updates the 'brochureFilename' property to store the PDF file name
+                // instead of its contents
+                $user->setPassport($newFilename);
+            }
+            if($cv) {
+                $originalFilename = pathinfo($cv->getClientOriginalName(), PATHINFO_FILENAME);
+                // this is needed to safely include the file name as part of the URL
+                $safeFilename = $slugger->slug($originalFilename);
+                $newFilename = $safeFilename.'-'.uniqid().'.'.$cv->guessExtension();
+            
+                // Move the file to the directory where brochures are stored
+                try {
+                    $cv->move(
+                        $this->getParameter('brochures_directory'),
+                        $newFilename
+                    );
+                } catch (FileException $e) {
+                    // ... handle exception if something happens during file upload
+                }
+                // updates the 'brochureFilename' property to store the PDF file name
+                // instead of its contents
+                $user->setCv($newFilename);
+            }
+            if($file) {
+                $originalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+                // this is needed to safely include the file name as part of the URL
+                $safeFilename = $slugger->slug($originalFilename);
+                $newFilename = $safeFilename.'-'.uniqid().'.'.$file->guessExtension();
+            
+                // Move the file to the directory where brochures are stored
+                try {
+                    $file->move(
+                        $this->getParameter('brochures_directory'),
+                        $newFilename
+                    );
+                } catch (FileException $e) {
+                    // ... handle exception if something happens during file upload
+                }
+                // updates the 'brochureFilename' property to store the PDF file name
+                // instead of its contents
+                $user->setFile($newFilename);
+            }
+            
             if ($percent == 100) {
                 $user->setDisponibility(1);
             }
-            
-            $user->setGender($gender);
-            $user->setFirstName($firstName);
-            $user->setLastName($lastName);
-            $user->setLocation($location);
-            $user->setAddress($address);
-            $user->setCountry($country);
-            $user->setNationality($nationality);
-            $user->setBirthdate($birthdate);
-            $user->setBirthplace($birthplace);
-            // $user->setPicture();
-            // $user->setPassport();
-            // $user->setCv();
-            // $user->setFile();
-            $user->setExperience($experience);
-            $user->setDescription($description);
-            $user->setCategorie($category);
             $user->setUpdatedAt(new DateTime());
             
             $entityManager->flush();

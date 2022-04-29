@@ -45,8 +45,8 @@
                                         required : true
                                     }
                                 )}}
-                                {{form_label(form.email, 'Email' )}}
-                                <span class="help-block">Confirm your password.</span>
+                                <label for="email">Email</label>
+                                <span class="help-block">Type your email address.</span>
                             </div>
                             <div class="input-field">
                                 {{form_widget(form.password, 
@@ -61,9 +61,9 @@
                                         required : true
                                     }
                                 )}}
-                                {{form_label(form.password, 'Password' )}}
+                                <label for="password">Password</label>
                                 <i class="fa fa-eye show-password"></i>
-                                <span class="help-block">Confirm your password.</span>
+                                <span class="help-block">Type your password.</span>
                             </div>
                             <div class="input-field">
                                 {{form_widget(form.confirmPassword, 
@@ -78,7 +78,7 @@
                                         required : true
                                     }
                                 )}}
-                                {{form_label(form.confirmPassword, 'Confirm Password' )}}
+                                <label for="password_confirmation">Confirm Password</label>
                                 <i class="fa fa-eye show-password"></i>
                                 <span class="help-block">Confirm your password.</span>
                             </div>

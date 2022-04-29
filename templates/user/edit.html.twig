@@ -29,10 +29,17 @@
             <div class="container">
                 <div class="row">
                     <div class="score-container">
-                        <h4>
-                            <img src="https://acegif.com/wp-content/gifs/cute-bunny-gif-6.gif" style="width: 201px;"> &nbsp;
-                            &nbsp; Hooray ! Your profile is complete.
-                        </h4>
+                        {% if percent == 100 %}
+                            <h4>
+                                <img src="https://acegif.com/wp-content/gifs/cute-bunny-gif-6.gif" style="width: 201px;"> &nbsp;
+                                &nbsp; Hooray ! Your profile is complete.
+                            </h4>
+                        {% else %}
+                            <h4>
+                                <img src="https://c.tenor.com/amHNZW2CV0UAAAAM/%E5%85%94%E5%AD%90-secret-life-of-pets.gif" style="width: 201px;"> &nbsp;
+                                &nbsp; One more effort to finish
+                            </h4>
+                        {% endif %}
                         <div class="c100 p100 small complete ">
                             <span>{{percent}} %</span>
                             <div class="slice">

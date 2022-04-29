@@ -37,12 +37,19 @@
             <div class="container">
                 <div class="row">
                     <div class="score-container">
-                        <h4>
-                            <img src="https://acegif.com/wp-content/gifs/cute-bunny-gif-6.gif" style="width: 201px;"> &nbsp;
-                            &nbsp; Hooray ! Your profile is complete.
-                        </h4>
+                        {% if percent == 100 %}
+                            <h4>
+                                <img src="https://acegif.com/wp-content/gifs/cute-bunny-gif-6.gif" style="width: 201px;"> &nbsp;
+                                &nbsp; Hooray ! Your profile is complete.
+                            </h4>
+                        {% else %}
+                            <h4>
+                                <img src="https://c.tenor.com/amHNZW2CV0UAAAAM/%E5%85%94%E5%AD%90-secret-life-of-pets.gif" style="width: 201px;"> &nbsp;
+                                &nbsp; One more effort to finish
+                            </h4>
+                        {% endif %}
                         <div class="c100 p100 small complete ">
-                            <span>100%</span>
+                            <span>{{ percent }}%</span>
                             <div class="slice">
                                 <div class="bar"></div>
                                 <div class="fill"></div>
@@ -61,12 +68,6 @@
                         <h3 class="text-extrabold">Your personal informations</h3>
                         <div class="col-xs-12 col-sm-6 col-md-4">
                             <div class="input-field">
-                                {# <select id="gender" name="gender">
-                                    <option value="">Choose an option...</option>
-                                    <option value="0">Female</option>
-                                    <option value="1">Male</option>
-                                    <option value="2">Transgender</option>
-                                </select> #}
                                 <input type="text" class="form-control" name="gender" id="gender" value="{{ user.gender }}">
                                 <label for="gender" class="active">Gender</label>
                             </div>
@@ -99,19 +100,8 @@
                     </div>
                     <div class="row">
                         <div class="col-xs-12 col-sm-6 col-md-4">
-                            <div class="file-field input-field"
-                                 style="margin-top: 32px;">
-                                <div class="btn btn-lg primary waves-effect waves-light">
-                                    <span><i class="material-icons">insert_photo</i> Photo</span>
-                                    <input id="photo" size="20000000" accept=".pdf,.jpg,.doc,.docx,.png,.gif" name="photo" type="file">
-                                </div>
-
-                                <div class="existing-file">
-                                    <a href="#!" target="_blank"><i class="material-icons">&#xE24D;</i> profil_picture.jpg</a>
-                                </div>
-                                <div class="file-path-wrapper">
-                                    <input class="file-path validate" type="text" placeholder="Upload your ID photo" readonly>
-                                </div>
+                            <div class="file-field input-field" style="margin-top: 32px;">
+                                <img src="/uploads/{{ user.picture }}" style="width: 200px;">
                             </div>
                         </div>
                         <div class="col-xs-12 col-sm-6 col-md-8">
@@ -151,10 +141,9 @@
                                 <div class="file-field input-field">
                                     <div class="btn btn-lg primary waves-effect waves-light">
                                         <span><i class="material-icons">&#xE24D;</i> Passport</span>
-                                        <input id="passport" size="20000000" accept=".pdf,.jpg,.doc,.docx,.png,.gif" name="passport" type="file">
                                     </div>
                                     <div class="existing-file">
-                                        <a href="#!" target="_blank"><i class="material-icons">&#xE24D;</i> passeport.jpg</a>
+                                        <div><i class="material-icons">&#xE24D;</i> {{user.passport}}</div>
                                     </div>
                                     <div class="file-path-wrapper">
                                         <input class="file-path validate" type="text" placeholder="Upload your passport" readonly>
@@ -164,11 +153,21 @@
                                 <div class="file-field input-field">
                                     <div class="btn btn-lg primary waves-effect waves-light">
                                         <span><i class="material-icons">&#xE24D;</i> CV</span>
-                                        <input id="cv" size="20000000" accept=".pdf,.jpg,.doc,.docx,.png,.gif" name="cv" type="file">
                                     </div>
-
                                     <div class="existing-file">
-                                        <a href="#!" target="_blank"><i class="material-icons">&#xE24D;</i> CV.pdf</a>
+                                        <div><i class="material-icons">&#xE24D;</i>{{user.cv}}</div>
+                                    </div>
+                                    <div class="file-path-wrapper">
+                                        <input class="file-path validate" type="text" placeholder="Upload your Curriculum Vitae" readonly>
+                                    </div>
+                                </div>
+
+                                <div class="file-field input-field">
+                                    <div class="btn btn-lg primary waves-effect waves-light">
+                                        <span><i class="material-icons">&#xE24D;</i> File</span>
+                                    </div>
+                                    <div class="existing-file">
+                                        <div><i class="material-icons">&#xE24D;</i>{{user.file}}</div>
                                     </div>
                                     <div class="file-path-wrapper">
                                         <input class="file-path validate" type="text" placeholder="Upload your Curriculum Vitae" readonly>
@@ -181,25 +180,12 @@
                         <div class="col-xs-12 col-sm-6">
                             <div class="col-xs-12 col-sm-12">
                                 <div class="input-field" style="margin-top: 5px;">
-                                    {# <select id="job_sector" name="job_sector[]" multiple data-placeholder="Type in or Select job sector you would be interested in.">
-                                        <option value="">Choose an option...</option>
-                                        <option value="">job sector</option>
-                                    </select> #}
                                     <input type="text" class="form-control" name="gender" id="gender" value="{{ user.categorie }}">
                                     <label for="job_sector" class="active">Interest in job sector</label>
                                 </div>
                             </div>
                             <div class="col-xs-12 col-sm-12">
                                 <div class="input-field">
-                                    {# <select id="experience" required="required" name="experience">
-                                        <option value="">Choose an option...</option>
-                                        <option value="3m">0 - 6 month</option>
-                                        <option value="6m">6 month - 1 year</option>
-                                        <option value="1y">1 - 2 years</option>
-                                        <option value="2y">2+ years</option>
-                                        <option value="5y">5+ years</option>
-                                        <option value="10y">10+ years</option>
-                                    </select> #}
                                     <input type="text" class="form-control" name="gender" id="gender" value="{{ user.experience }}">
                                     <label for="experience" class="active">Experience</label>
                                 </div>
@@ -207,8 +193,8 @@
                         </div>
                         <div class="col-xs-12 col-sm-12">
                             <div class="input-field">
-                                <textarea class="materialize-textarea" id="description" name="description" cols="50" rows="10" value="{{ user.description }}"></textarea>
-                                <label for="description">Short description for your profile, as well as more personnal informations (e.g. your hobbies/interests ). You can also paste any link you want.</label>
+                                <input type="text" class="form-control" id="description" name="description" value="{{ user.description }}">
+                                <label for="description" class="active">Short description for your profile, as well as more personnal informations (e.g. your hobbies/interests ). You can also paste any link you want.</label>
                             </div>
                         </div>
                     </div>
