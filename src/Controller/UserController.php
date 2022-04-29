@@ -63,50 +63,33 @@ class UserController extends AbstractController
         $user = $this->getUser();
 
         $form = $this->createForm(UserType::class, $user);
-        $array = (array) $form->getData();
-        $info = 0;
-        $total = 0;
-        foreach ($array as $key => $value) {
-           if ($value !== null){
-                $total++;
-                $info++;
-           }else{
-               $total++;
-           }
-        }
-        $percent =  $info/$total*100;
-       
+        // $form2 = $this->createForm(ChangePasswordType::class, $this->getUser());
+        // $form2->handleRequest($request);
+
+        
+        // if ($form2->isSubmitted() && $form2->isValid()) {
+
+        //     $user->setUpdatedAt(new DateTime());
+        //     $entityManager->flush();
+            
+        //     return $this->redirectToRoute('app_profile', [], Response::HTTP_SEE_OTHER);
+        // }
         // Call whatever methods you've added to your User class
         // For example, if you added a getFirstName() method, you can use that.
         // return new Response('Well hi there '. $user->getEmail());
         return $this->render('user/profile.html.twig', [
             'user' => $user,
-            'percent' => round($percent),
+            // 'form2' => $form2->createView(),
         ]);
     }
 
     #[Route('/profile/edit/{id}', name: 'app_profile_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, User $user, ManagerRegistry $doctrine, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
     {
-        // $userId = $request->query->get('id');
-        // $user = $doctrine->getRepository(User::class)->findOneBy(['id' => $userId]);
-        // dd($user);
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
         $categories = $doctrine->getRepository(Categorie::class)->findAll();
         
-        $array = (array) $form->getData();
-        $info = 0;
-        $total = 0;
-        foreach ($array as $key => $value) {
-           if ($value !== null){
-                $total++;
-                $info++;
-           }else{
-               $total++;
-           }
-        }
-        $percent =  $info/$total*100;
         
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var UploadedFile $picture */
@@ -197,7 +180,7 @@ class UserController extends AbstractController
                 $user->setFile($newFilename);
             }
             
-            if ($percent == 100) {
+            if ($user->isComplete() == 100) {
                 $user->setDisponibility(1);
             }
             $user->setUpdatedAt(new DateTime());
@@ -210,7 +193,6 @@ class UserController extends AbstractController
         return $this->renderForm('user/edit.html.twig', [
             'user' => $user,
             'form' => $form,
-            'percent' => round($percent),
             'categories' => $categories,
         ]);
     }

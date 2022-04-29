@@ -542,4 +542,25 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         // $this->plainPassword = null;
     }
 
+    public function isComplete() 
+    {
+        
+        $array = [$this->getGender(), $this->getFirstName(), $this->getLastName(), $this->getLocation(), $this->getAddress(), $this->getPicture(), 
+        $this->getCountry(), $this->getNationality(), $this->getBirthdate(), $this->getBirthplace(), $this->getPassport(), $this->getCategorie(), 
+        $this->getExperience(), $this->getCv(), $this->getFile(), $this->getDescription()
+        ];
+        $info = 0;
+        $total = 0;
+        // dd($array);
+        foreach ($array as $key => $value) {
+           if ($value !== null){
+                $total++;
+                $info++;
+           }else{
+               $total++;
+           }
+        }
+        $percent =  $info/$total*100;
+        return round($percent);
+    }        
 }
