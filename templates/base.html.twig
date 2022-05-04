@@ -131,7 +131,7 @@
                         <div class="nav-overlay" id="overlay">
                             <nav class="overlay-menu">
                                 <ul>
-                                    <li><a href="/">Home</a></li>
+                                    <li><a href="{{ path('app_home') }}">Home</a></li>
                                     <li><a href="/templates/jobs/index.html">Jobs Offers</a></li>
                                     <li><a href="/templates/compagny.html">About Us</a></li>
                                     <li><a href="/templates/contact.html">Contact</a></li>
@@ -139,7 +139,7 @@
                                     {% if not app.user %}
                                         <li><a href="{{ path('security_login') }}">Login</a></li>
                                     {% else %}
-                                        <li><a href="/templates/auth/profile.html">Profile</a></li>
+                                        <li><a href="{{ path('app_profile') }}">Profile</a></li>
                                         <li><a href="{{ path('security_logout') }}">Logout</a></li>
                                     {% endif %}
                                 </ul>
@@ -154,23 +154,27 @@
                                     <span>Login</span>
                                 </a>
                             </li>
-                        {% else %}
-                            <li class=" dropdown">
-                                <a target="{_self}" href="{{ path('security_logout') }}">
-                                    <span>Logout</span>
-                                </a>
-                            </li>
-                        {% endif %}
                             <li class=" dropdown">
                                 <a target="_self" href="{{ path('security_register') }}" class="btn bn-lg gradient secondary btn-block waves-effect waves-light btn-register">
                                     <span>Sign Up</span>
                                 </a>
-
                             </li>
+                        {% else %}
+                            <li class=" dropdown">
+                                <a target="{_self}" href="{{ path('app_profile') }}">
+                                    <span>Profile</span>
+                                </a>
+                            </li>
+                            <li class=" dropdown">
+                                <a target="_self" href="{{ path('security_logout') }}" class="btn bn-lg gradient secondary btn-block waves-effect waves-light btn-register">
+                                    <span>Logout</span>
+                                </a>
+                            </li>
+                        {% endif %}
                         </ul>
                         <ul class="menuzord-menu pull-right light" role="navigation">
                             <li class="active dropdown">
-                                <a target="_self" href="/">
+                                <a target="_self" href="{{ path('app_home') }}">
                                     <i class=""></i>
                                     <span>Home</span>
                                 </a>
