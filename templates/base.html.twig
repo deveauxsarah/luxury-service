@@ -114,7 +114,7 @@
 
                 <div id="materialize-menu" class="menuzord">
 
-                    <a class="brand logo-brand" href="/"></a>
+                    <a class="brand logo-brand" href="{{ path('app_home') }}"></a>
                     <div id="mobile-menu">
                         <div class="nav-wrapper" id="toggle">
                             <span class="top"></span>
@@ -123,7 +123,7 @@
                         </div>
                         <div class="icon-wrapper">
                             <span class="account">
-                                <a href="/templates/auth/profile.html">
+                                <a href="{{ path('app_profile') }}">
                                     <i class="material-icons">&#xE7FD;</i>
                                 </a>
                             </span>
@@ -132,9 +132,9 @@
                             <nav class="overlay-menu">
                                 <ul>
                                     <li><a href="{{ path('app_home') }}">Home</a></li>
-                                    <li><a href="/templates/jobs/index.html">Jobs Offers</a></li>
-                                    <li><a href="/templates/compagny.html">About Us</a></li>
-                                    <li><a href="/templates/contact.html">Contact</a></li>
+                                    <li><a href="{{ path('app_offer_index') }}">Jobs Offers</a></li>
+                                    <li><a href="{{ path('app_about') }}">About Us</a></li>
+                                    {# <li><a href="/templates/contact.html">Contact</a></li> #}
                                     <li>-</li>
                                     {% if not app.user %}
                                         <li><a href="{{ path('security_login') }}">Login</a></li>
@@ -180,23 +180,23 @@
                                 </a>
                             </li>
                             <li class=" dropdown">
-                                <a target="_self" href="/templates/jobs/index.html">
+                                <a target="_self" href="{{ path('app_offer_index') }}">
                                     <i class=""></i>
                                     <span>Jobs offers</span>
                                 </a>
                             </li>
                             <li class=" dropdown">
-                                <a target="_self" href="/templates/compagny.html">
+                                <a target="_self" href="{{ path('app_about') }}">
                                     <i class=""></i>
                                     <span>About us</span>
                                 </a>
                             </li>
-                            <li class=" dropdown">
+                            {# <li class=" dropdown">
                                 <a target="_self" href="/templates/contact.html">
                                     <i class=""></i>
                                     <span>Contact</span>
                                 </a>
-                            </li>
+                            </li> #}
                         </ul>
                     </div>
                 </div>
@@ -216,8 +216,8 @@
                 </a>
 
                 <ul class="social-link tt-animate ltr mt-20">
-                    <li><a href="#!" target="_blank"><i class="fa fa-facebook"></i></a></li>
-                    <li><a href="#!" target="_blank"><i class="fa fa-linkedin"></i></a></li>
+                    <li><a href="https://m.facebook.com/GarageQuatreCentQuatre/" target="_blank"><i class="fa fa-facebook"></i></a></li>
+                    <li><a href="https://www.linkedin.com/company/garage-404/" target="_blank"><i class="fa fa-linkedin"></i></a></li>
                 </ul>
 
                 <hr class="mt-10">
@@ -241,25 +241,25 @@
             <div class="container">
                 <ul class="" role="navigation">
                     <li class="active dropdown">
-                        <a target="_self" href="/">
+                        <a target="_self" href="{{ path('app_home') }}">
                             <span>Home</span>
                         </a>
                     </li>
                     <li class=" dropdown">
-                        <a target="_self" href="/jobs.html">
+                        <a target="_self" href="{{ path('app_offer_index') }}">
                             <span>Jobs offers</span>
                         </a>
                     </li>
                     <li class=" dropdown">
-                        <a target="_self" href="/about-us.html">
+                        <a target="_self" href="{{ path('app_about') }}">
                             <span>About us</span>
                         </a>
                     </li>
-                    <li class=" dropdown">
+                    {# <li class=" dropdown">
                         <a target="_self" href="/contact.html">
                             <span>Contact</span>
                         </a>
-                    </li>
+                    </li> #}
                 </ul>
             </div><!-- /.container -->
         </div><!-- /.secondary-footer -->
